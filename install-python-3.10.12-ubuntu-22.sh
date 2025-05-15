@@ -25,4 +25,4 @@ sudo make altinstall
 echo "=== Verifying Python installation ==="
 /usr/local/bin/python3.10 --version
 
-echo "=== Python 3.10.12 ins
+echo "=== Python 3.10.12 insalled ==="
