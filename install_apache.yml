@@ -1,17 +1,19 @@
 ---
-- name: Install and start Apache on Ubuntu
-  hosts: target_node
-  become: yes  # Enable sudo privileges
-  tasks:
-    - name: Install apache2
-      ansible.builtin.apt:
-        name: apache2
-        state: present
-        update_cache: yes
+- name: Install and start Apache on Ubuntu  # Descriptive name of the playbook for clarity
+  hosts: target_node                        # Target host/group (defined in inventory) where tasks will run
+  become: yes                               # Execute all tasks with sudo privileges (administrator access)
 
-    - name: Start and enable apache2 service
-      ansible.builtin.service:
-        name: apache2
-        state: started
-        enabled: yes
+  tasks:                                    # List of tasks to perform on the target node
+    - name: Install apache2                 # Description of the task
+      ansible.builtin.apt:                  # Use the built-in 'apt' module to manage packages on Debian/Ubuntu
+        name: apache2                       # Name of the package to install
+        state: present                      # Ensure the package is installed (do nothing if already installed)
+        update_cache: yes                   # Update the apt package index before installing
+
+    - name: Start and enable apache2 service # Description of the task
+      ansible.builtin.service:               # Use the built-in 'service' module to manage services
+        name: apache2                        # Name of the service to manage
+        state: started                       # Ensure the service is currently running
+        enabled: yes                         # Ensure the service starts on boot
+
 # ansible-playbook -i inventory.yml install_apache.yml
