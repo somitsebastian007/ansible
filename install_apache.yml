@@ -1,0 +1,17 @@
+---
+- name: Install and start Apache on Ubuntu
+  hosts: target_node
+  become: yes  # Enable sudo privileges
+  tasks:
+    - name: Install apache2
+      ansible.builtin.apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Start and enable apache2 service
+      ansible.builtin.service:
+        name: apache2
+        state: started
+        enabled: yes
+# ansible-playbook -i inventory.yml install_apache.yml

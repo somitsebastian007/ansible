@@ -1,0 +1,6 @@
+all:
+  hosts:
+    target_node:
+      ansible_host: <target_node_ip>  # Replace with the node's IP or hostname
+      ansible_user: <username>        # Replace with the SSH username
+# ansible -i inventory.yml target_node -m ping

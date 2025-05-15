@@ -11,7 +11,7 @@ sudo apt install ansible -y
 ansible --version
 
 # Edit Inventory File: (Master)
-sudo vi /etc/ansible/hosts
+touch inventory.yml
 
 # Set Up SSH Access to Managed Nodes (Master)
 ssh-keygen -t rsa -b 2048
@@ -33,3 +33,6 @@ cat ~/.ssh/authorized_keys
 
 # Test ssh connectivity to Managed Node after copying the key: (Master)
 ssh user@192.168.1.10  # use private IP
+
+# Ping from Ansible
+ansible -i "172.31.29.175" all -m ping -u ubuntu -k
