@@ -36,3 +36,8 @@ ssh user@192.168.1.10  # use private IP
 
 # Ping from Ansible
 ansible -i "172.31.29.175" all -m ping -u ubuntu -k
+ansible all -m ping
+ansible test -m ping
+
+# Update ansible default invenstory
+sudo vi /etc/ansible/hosts
