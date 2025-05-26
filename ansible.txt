@@ -21,3 +21,7 @@ web1 ansible_host=192.168.1.10 ansible_user=ubuntu
 # Same name present in invenetory  # Create under same /etc/ansible dir
 ansible_user: ubuntu
 package_name: apache2
+
+
+# execute shell command
+ansible all -m shell -a "uptime"

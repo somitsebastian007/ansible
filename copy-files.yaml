@@ -1,0 +1,11 @@
+- name: Copy a file to remote machine
+  hosts: all
+  become: yes
+  tasks:
+    - name: Copy local file to remote destination
+      copy:
+        src: /path/to/local/file.txt       # Path on your Ansible control machine
+        dest: /home/ubuntu/file.txt        # Path on the target (remote) machine
+        owner: ubuntu                      # Set file owner
+        group: ubuntu                      # Set file group
+        mode: '0644'                       # Set file permissions
