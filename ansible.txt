@@ -25,3 +25,172 @@ package_name: apache2
 
 # execute shell command
 ansible all -m shell -a "uptime"
+
+# execute playbook
+ansible-playbook -i inventory_file playbook.yml -l group_name
+
+=============================================
+
+Host Variables with ansible_user
+Example 1: Different users per host
+# inventory.ini
+[web1]
+172.31.84.179 ansible_user=ubuntu
+
+[web2]
+172.31.90.15 ansible_user=user1
+
+=============================================
+
+Group Variables with ansible_user
+# inventory.ini
+[web1]
+172.31.84.179 ansible_user=ubuntu
+
+[web1:vars]
+ansible_user=prod_admin 
+#
+[web2]
+172.31.90.15 ansible_user=user1
+
+[web2:vars]
+ansible_user=stage_user
+
+=============================================
+
+Ansible Modules
+----------------
+Modules are the building blocks of Ansible - they are small programs that Ansible pushes out to 
+remote nodes to execute specific tasks. Each module performs a specific function like installing 
+a package, copying a file, or managing a service.
+
+Common Module Categories and Examples:
+1. System Modules -> apt and service
+# Install a package (apt module for Debian/Ubuntu)
+- name: Install httpd
+  apt:
+    name: httpd
+    state: present
+    update_cache: yes
+
+# Start and enable a service
+- name: Ensure httpd is running and enabled
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+Full Playbook with apt and service modules:
+- name: Install and configure httpd on Debian/Ubuntu
+  hosts: web1
+  become: yes
+  tasks:
+
+    - name: Install httpd
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Ensure httpd is running and enabled
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+2. File Modules
+# Copy a file to remote hosts
+- name: Copy index.html
+  copy:
+    src: files/index.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: '0644'
+
+# Create a directory
+- name: Create logs directory
+  file:
+    path: /var/log/myapp
+    state: directory
+    mode: '0755'
+
+Full playbook with copy and file module:
+---
+- name: Copy index.html and create log directory on remote hosts
+  hosts: all
+  become: true
+  tasks:
+
+    - name: Copy index.html
+      copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Create logs directory
+      file:
+        path: /var/log/myapp
+        state: directory
+        mode: '0755'
+
+
+=============================================
+
+Ansible Ad-Hoc Commands
+----------------------
+Ad-hoc commands are quick one-liners you can run to perform simple tasks without writing a playbook. 
+They're great for quick checks or simple operations.
+
+1. Ping all hosts in inventory
+ansible all -m ping
+
+2. Check disk space on web servers
+ansible webservers -m command -a "df -h"
+
+3. Install a package on Debian systems
+ansible debian_servers -m apt -a "name=nginx state=present" -b
+-b stands for "become" (run with sudo)
+
+4. Copy a file to multiple servers
+ansible webservers -m copy -a "src=/local/path/file.txt dest=/remote/path/file.txt"
+
+5. Run a shell command
+ansible db_servers -m shell -a "uptime"
+
+=============================================
+
+Handlers
+--------
+Handlers are a special type of task in Ansible that only run when notified by another task.
+They're typically used to perform actions that should only happen once, even if triggered 
+multiple times, such as restarting services or reloading configurations.
+
+---
+- name: Example playbook with handlers
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Install Apache web server
+      apt:
+        name: apache2
+        state: present
+      notify: restart apache
+
+    - name: Ensure Apache is running
+      service:
+        name: apache2
+        state: started
+
+  handlers:
+    - name: restart apache
+      service:
+        name: apache2
+        state: restarted
+
+=============================================
+
+Roles:
