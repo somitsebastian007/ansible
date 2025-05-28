@@ -194,3 +194,131 @@ multiple times, such as restarting services or reloading configurations.
 =============================================
 
 Roles:
+------
+An Ansible Role is a way to organize playbooks, files, templates, and other Ansible components into 
+a reusable, standalone structure. Roles provide a framework for fully independent or interdependent 
+collections of variables, tasks, files, templates, and modules.
+
+Key Benefits of Roles:
+--------------------
+=> Simplification: Make complex playbooks easier to understand and maintain
+=> Reusability: Write once, use many times across different playbooks
+=> Standardization: Enforce consistent directory structures
+
+A typical Ansible role has this directory structure:
+--------------------------------------------------
+role_name/
+    ├── defaults/         # Default variables (lowest precedence)
+    ├── vars/             # Other variables (higher precedence)
+    ├── files/            # Static files to be copied
+    ├── templates/        # Jinja2 templates
+    ├── tasks/            # Main task list
+    ├── handlers/         # Handlers (triggered tasks)
+    ├── meta/             # Role dependencies
+    ├── library/          # Custom modules
+    ├── lookup_plugins/   # Custom lookup plugins
+    └── tests/            # Test playbooks
+
+Practical: Creating an Nginx Web Server Role
+--------------------------------------------
+
+Step 1: Create the Role Structure
+=> ansible-galaxy init nginx_role
+
+Step 2: Define the Role Components
+(a) Tasks (tasks/main.yml): Define the steps to install and configure Nginx.
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Ensure Nginx is running
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Copy Nginx configuration file
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: '0644'
+  become: yes
+  notify: Restart Nginx
+
+
+(b) Handlers (handlers/main.yml): Define actions triggered by tasks, like restarting Nginx.
+---
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
+  become: yes
+
+(c) Templates (templates/nginx.conf.j2): Create a Jinja2 template for the Nginx configuration.
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+
+events {
+    worker_connections {{ nginx_worker_connections | default(768) }};
+}
+
+http {
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    server {
+        listen 80;
+        server_name {{ server_name | default('localhost') }};
+
+        root /var/www/html;
+        index index.html;
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }
+}
+
+(d) Defaults (defaults/main.yml): Set default variables for the role.
+---
+nginx_worker_connections: 1024
+server_name: example.com
+
+(e) Files (files/index.html): Add a sample static HTML file to serve.
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to Nginx!</title>
+</head>
+<body>
+    <h1>Hello from Ansible-managed Nginx!</h1>
+</body>
+</html>
+
+(f) Copy the HTML file (Add to tasks/main.yml):
+- name: Copy static HTML file
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html
+    mode: '0644'
+  become: yes
+
+(e) Create a Playbook to Use the Role (outside the role folder)
+---
+- name: Deploy Nginx web server
+  hosts: localhost
+  become: yes
+  roles:
+    - nginx_role
