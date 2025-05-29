@@ -17,6 +17,10 @@ web2 ansible_host=192.168.1.11
 [webservers]
 web1 ansible_host=192.168.1.10 ansible_user=ubuntu
 
+Note:
+If you do not explicitly mention ansible_user in your Ansible inventory or playbook, 
+Ansible will use the current user running the Ansible command on the control machine
+
 # Group Variables => group_vars/webservers.yml
 # Same name present in invenetory  # Create under same /etc/ansible dir
 ansible_user: ubuntu
@@ -116,7 +120,7 @@ Full Playbook with apt and service modules:
     mode: '0755'
 
 Full playbook with copy and file module:
----
+---------------------------------------
 - name: Copy index.html and create log directory on remote hosts
   hosts: all
   become: true
@@ -140,7 +144,7 @@ Full playbook with copy and file module:
 =============================================
 
 Ansible Ad-Hoc Commands
-----------------------
+-----------------------
 Ad-hoc commands are quick one-liners you can run to perform simple tasks without writing a playbook. 
 They're great for quick checks or simple operations.
 

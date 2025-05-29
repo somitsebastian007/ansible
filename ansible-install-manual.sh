@@ -25,9 +25,9 @@ ssh -i <key.pem> ubuntu@<second-ip-public>
 vi id_rsa.pub
 
 # Run Below Commands (Manage Node)
-mkdir -p ~/.ssh
-cat ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
+mkdir -p ~/.ssh # Optional, Run only if required
+cat ~/.ssh/authorized_keys # Optional, Run only if required
+chmod 600 ~/.ssh/authorized_keys # Optional, Run only if required
 cat id_rsa.pub >> ~/.ssh/authorized_keys
 cat ~/.ssh/authorized_keys
 
