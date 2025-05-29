@@ -2,15 +2,15 @@
 ssh -i key.pem ubuntu@<public-ip>
 
 # For Ubuntu/Debian: (Master)
-sudo apt update -y
-sudo apt install software-properties-common
-sudo add-apt-repository --yes --update ppa:ansible/ansible
-sudo apt install ansible -y
+sudo apt update -y # Updates the local package index from the configured repositories
+sudo apt install software-properties-common # mandatory to install software from 3rd party sources, like the Ansible PPA.
+sudo add-apt-repository --yes --update ppa:ansible/ansible # Adds ansible repository
+sudo apt install ansible -y # Install Ansible
 
 # Verify Installation: (Master)
 ansible --version
 
-# Edit Inventory File: (Master)
+# Edit Inventory File: (Master) (Optional can use default inventory)
 touch inventory.yml
 
 # Set Up SSH Access to Managed Nodes (Master)
