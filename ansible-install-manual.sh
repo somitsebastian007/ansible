@@ -41,3 +41,12 @@ ansible test -m ping
 
 # Update ansible default invenstory
 sudo vi /etc/ansible/hosts
+
+
+How key based SSH Works (Behind the Scenes):
+------------------------------------------
+=> When Ansible runs a playbook or module, it uses ssh to connect.
+=> SSH client uses the private key to generate a cryptographic signature.
+=> The remote SSH server (on the managed node) checks if the public key exists in authorized_keys.
+=> If it does, it uses a challenge-response mechanism to verify the private key matches the public key.
+=> If verified, access is granted — no password needed.
