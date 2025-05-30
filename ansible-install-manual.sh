@@ -22,7 +22,7 @@ cat /home/ubuntu/.ssh/id_rsa.pub
 # Now login to Manage Node
 ssh -i <key.pem> ubuntu@<second-ip-public>
 # Create a new file id_rsa.pub and paste the content (Manage Node)
-vi id_rsa.pub
+sudo vi id_rsa.pub
 
 # Run Below Commands (Manage Node)
 mkdir -p ~/.ssh # Optional, Run only if required
