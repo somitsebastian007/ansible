@@ -304,10 +304,10 @@ server_name: example.com
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome to Nginx!</title>
+    <title>Welcome to Devops Class</title>
 </head>
 <body>
-    <h1>Hello from Ansible-managed Nginx!</h1>
+    <h1>Welcome to Devops Class!</h1>
 </body>
 </html>
 
